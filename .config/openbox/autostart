@@ -1,0 +1,6 @@
+xset -dpms
+xset s off
+fakeResolution 3840x2160
+hidecursor repeat-exhibit exhibit-mineralien &
+#hidecursor repeat-exhibit exhibit-ornament &
+#hidecursor repeat-exhibit exhibit-crystal-flight &

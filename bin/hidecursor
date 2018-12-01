@@ -1,0 +1,9 @@
+#!/bin/bash
+# This script is supposed to hide the cursor while the "$@" is running.
+# Afterwards the cursor must be visible again (i.e. xbanish must have exited).
+
+trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
+xbanish &
+
+# Don't use exec here because the user must still to be able to ps | grep for hidecursor.
+"$@"

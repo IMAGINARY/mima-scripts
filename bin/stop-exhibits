@@ -1,0 +1,6 @@
+#!/bin/bash
+# This script is supposed to kill all running exhibits and exhibit repeaters.
+# It is just a draft and I just updloaded it to get idea across.
+
+pkill --exact repeat-exhibit
+pkill "exhibit-*"
