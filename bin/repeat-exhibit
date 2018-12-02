@@ -3,5 +3,41 @@
 # When the script is terminated from outside, the loop must
 # end as well as the process running inside the loop
 
-trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
-while true; do "$@"; done
+#trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
+
+PID="0"
+EXIT="0"
+
+function repeat_handler(){
+#  echo "repeat_handler[$@]!"
+#  ps f
+  if [[ "$PID" != 0 ]]; then
+    kill -- "${PID}" >/dev/null 2>&1
+    PID="0"
+  fi
+  EXIT="1"
+
+  trap - SIGTERM
+#  kill -- -$BASHPID
+  kill -- -$$ >/dev/null 2>&1
+  kill 0 >/dev/null 2>&1
+#  ps f
+#  echo "....repeat_handler!"
+  exit # NOTE: ANY SIGNAL => FINISH!!!
+}
+
+for sig in INT TERM QUIT EXIT; do
+  eval "trap 'repeat_handler ${sig}' $sig"
+done
+
+
+while [[ "${EXIT}" = "0" ]]; do 
+  eval "$@" &
+  PID="${!}"
+  wait
+  # exit code return/propagate!?
+  PID="0"
+  sleep 0.1
+done
+
+# ps f

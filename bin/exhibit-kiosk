@@ -4,5 +4,8 @@
 # The wrapper script is supposed to be visible in ps -a resp. ps -u `id -u` to make
 # it easy to kill it (by a script or manually)
 
-trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
-kiosk-browser
+source "`dirname '$0'`/exhibit-common.bash"
+
+kiosk-browser &
+PID="${!}"
+wait

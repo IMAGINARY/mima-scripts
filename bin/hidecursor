@@ -2,8 +2,45 @@
 # This script is supposed to hide the cursor while the "$@" is running.
 # Afterwards the cursor must be visible again (i.e. xbanish must have exited).
 
-trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
+#trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
+PID="0"
+PID_CMD="0"
+
 xbanish &
+PID="${!}"
+
+function xbanish_handler(){
+#  echo "xbanish_handler[$@]!"
+#  ps f
+  if [[ "$PID" != 0 ]]; then
+    kill -- "${PID}" 1>/dev/null 2>&1
+    PID="0"
+  fi
+
+  if [[ "${PID_CMD}" != 0 ]]; then
+    kill -- "${PID_CMD}" 1>/dev/null 2>&1
+    PID_CMD="0"
+  fi
+
+  trap - SIGTERM
+#  kill -- -$BASHPID
+  kill -- -$$ 1>/dev/null 2>&1
+  kill 0 1>/dev/null 2>&1
+#  ps f
+#  echo "....xbanish_handler!"
+  exit # NOTE: ANY SIGNAL => FINISH!!!
+}
+
+for sig in INT TERM QUIT EXIT; do
+  eval "trap 'xbanish_handler ${sig}' $sig"
+done
+
 
 # Don't use exec here because the user must still to be able to ps | grep for hidecursor.
-"$@"
+eval "$@" &
+PID_CMD="${!}"
+wait
+# return/propagate exit code
+
+# ps f

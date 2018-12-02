@@ -1,3 +1,10 @@
 #!/bin/bash
-trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
-kiosk-browser -vvv --kiosk --fullscreen --serve ~/repos/mima-launchers/html apps/cindyjs/iornament/index.html
+
+source "`dirname '$0'`/exhibit-common.bash"
+
+kiosk-browser -vvv --kiosk --fullscreen --localhost --serve ~/repos/mima-launchers/html apps/cindyjs/iornament/index.html &
+
+PID="${!}"
+wait
+
+
