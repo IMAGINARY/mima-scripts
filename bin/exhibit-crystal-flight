@@ -1,3 +1,11 @@
 #!/bin/bash
-trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
-kiosk-browser -vvv --kiosk --fullscreen --integration --serve ~/repos/mima-launchers/html index.html?cfg=crystal-flight
+
+# Launch the exhibit in the background
+kiosk-browser -vvv --kiosk --fullscreen --integration --serve ~/repos/mima-launchers/html index.html?cfg=crystal-flight &
+PID=$!
+
+# Kill the exhibit if it is still running whe the script exits
+trap "kill $PID >/dev/null 2>&1" SIGINT SIGTERM EXIT
+
+# Wait for the exhibit to finish or until the signal trap is triggered
+wait

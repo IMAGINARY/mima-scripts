@@ -3,5 +3,20 @@
 # When the script is terminated from outside, the loop must
 # end as well as the process running inside the loop
 
-trap "trap - SIGTERM && kill -- -$$ >/dev/null 2>&1" SIGINT SIGTERM EXIT
-while true; do "$@"; done
+# Repeatedly start the command given as argument
+while true;
+do
+	# Start argument in background
+	"$@" &
+	PID=$!
+
+	# Set up trap handler to kill background process on interruption and exit the loop by kill the script
+	trap "trap - SIGTERM && kill -- $PID -$$ >/dev/null 2>&1; exit" SIGINT SIGTERM EXIT
+	trap "trap - SIGTERM && kill -- $PID; exit" SIGINT SIGTERM EXIT
+
+	# Wait for background process to finish or interrupt
+	wait
+
+	# Wait until background process finished on its own or is killed by the trap handler
+	wait
+done
