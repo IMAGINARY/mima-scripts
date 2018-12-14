@@ -11,7 +11,6 @@ do
 	PID=$!
 
 	# Set up trap handler to kill background process on interruption and exit the loop by kill the script
-	trap "trap - SIGTERM && kill -- $PID -$$ >/dev/null 2>&1; exit" SIGINT SIGTERM EXIT
 	trap "trap - SIGTERM && kill -- $PID; exit" SIGINT SIGTERM EXIT
 
 	# Wait for background process to finish or interrupt
