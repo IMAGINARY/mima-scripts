@@ -7,4 +7,4 @@ SCRIPTNAME=$(basename "$0")
 cd "$(dirname "$0")"
 
 # Sync files via rsync
-rsync -a --info=ALL --exclude=".git" --exclude="$SCRIPTNAME" "$PWD/" ~/
+rsync -a --info=ALL "$PWD/.config" "$PWD/bin" ~/

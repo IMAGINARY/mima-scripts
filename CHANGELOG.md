@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2018-12-14
 ### Fixed
+- Install script must not copy top level elements
 - Trap handler in `repeat-exhibit`
 
 ## [0.1.0] - 2018-12-13
